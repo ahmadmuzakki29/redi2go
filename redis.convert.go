@@ -8,7 +8,10 @@ func (r *Reply) String() (string, *Error) {
 	}
 
 	val, err := redigo.String(r.value, nil)
-	return val, &Error{err}
+	if err != nil {
+		return val, &Error{err}
+	}
+	return val, nil
 }
 
 func (r *Reply) Bytes() ([]byte, *Error) {
@@ -17,7 +20,10 @@ func (r *Reply) Bytes() ([]byte, *Error) {
 	}
 
 	val, err := redigo.Bytes(r.value, nil)
-	return val, &Error{err}
+	if err != nil {
+		return val, &Error{err}
+	}
+	return val, nil
 }
 
 func (r *Reply) Float64() (float64, *Error) {
@@ -26,7 +32,10 @@ func (r *Reply) Float64() (float64, *Error) {
 	}
 
 	val, err := redigo.Float64(r.value, nil)
-	return val, &Error{err}
+	if err != nil {
+		return val, &Error{err}
+	}
+	return val, nil
 }
 
 func (r *Reply) ByteSlice() ([][]byte, *Error) {
@@ -35,7 +44,10 @@ func (r *Reply) ByteSlice() ([][]byte, *Error) {
 	}
 
 	val, err := redigo.ByteSlices(r.value, nil)
-	return val, &Error{err}
+	if err != nil {
+		return val, &Error{err}
+	}
+	return val, nil
 }
 
 func (r *Reply) Strings() ([]string, *Error) {
@@ -44,7 +56,10 @@ func (r *Reply) Strings() ([]string, *Error) {
 	}
 
 	val, err := redigo.Strings(r.value, nil)
-	return val, &Error{err}
+	if err != nil {
+		return val, &Error{err}
+	}
+	return val, nil
 }
 
 func (r *Reply) Int() (int, *Error) {
@@ -53,5 +68,20 @@ func (r *Reply) Int() (int, *Error) {
 	}
 
 	val, err := redigo.Int(r.value, nil)
-	return val, &Error{err}
+	if err != nil {
+		return val, &Error{err}
+	}
+	return val, nil
+}
+
+func (r *Reply) Bool() (bool, *Error) {
+	if r.err != nil {
+		return false, r.err
+	}
+
+	val, err := redigo.Bool(r.value, nil)
+	if err != nil {
+		return val, &Error{err}
+	}
+	return val, nil
 }
