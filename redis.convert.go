@@ -2,50 +2,56 @@ package redi2go
 
 import redigo "github.com/garyburd/redigo/redis"
 
-func (r *Reply) String() (string, error) {
+func (r *Reply) String() (string, *Error) {
 	if r.err != nil {
 		return "", r.err
 	}
 
-	return redigo.String(r.value, nil)
+	val, err := redigo.String(r.value, nil)
+	return val, &Error{err}
 }
 
-func (r *Reply) Bytes() ([]byte, error) {
+func (r *Reply) Bytes() ([]byte, *Error) {
 	if r.err != nil {
 		return nil, r.err
 	}
 
-	return redigo.Bytes(r.value, nil)
+	val, err := redigo.Bytes(r.value, nil)
+	return val, &Error{err}
 }
 
-func (r *Reply) Float64() (float64, error) {
+func (r *Reply) Float64() (float64, *Error) {
 	if r.err != nil {
 		return 0, r.err
 	}
 
-	return redigo.Float64(r.value, nil)
+	val, err := redigo.Float64(r.value, nil)
+	return val, &Error{err}
 }
 
-func (r *Reply) ByteSlice() ([][]byte, error) {
+func (r *Reply) ByteSlice() ([][]byte, *Error) {
 	if r.err != nil {
 		return [][]byte(nil), r.err
 	}
 
-	return redigo.ByteSlices(r.value, nil)
+	val, err := redigo.ByteSlices(r.value, nil)
+	return val, &Error{err}
 }
 
-func (r *Reply) Strings() ([]string, error) {
+func (r *Reply) Strings() ([]string, *Error) {
 	if r.err != nil {
 		return []string{}, r.err
 	}
 
-	return redigo.Strings(r.value, nil)
+	val, err := redigo.Strings(r.value, nil)
+	return val, &Error{err}
 }
 
-func (r *Reply) Int() (int, error) {
+func (r *Reply) Int() (int, *Error) {
 	if r.err != nil {
 		return 0, r.err
 	}
 
-	return redigo.Int(r.value, nil)
+	val, err := redigo.Int(r.value, nil)
+	return val, &Error{err}
 }

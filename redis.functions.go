@@ -4,7 +4,7 @@ func (r Redis) Do(command string, args ...interface{}) (interface{}, error) {
 	if r.Mock != nil {
 		return r.Mock.Do(command, args...)
 	}
-	c := r.Pool.Get()
+	c := r.pool.Get()
 	defer c.Close()
 
 	return c.Do(command, args...)
@@ -14,7 +14,7 @@ func (r *Redis) cmd(command string, args ...interface{}) *Reply {
 	reply := &Reply{}
 	data, err := r.Do(command, args...)
 	if err != nil {
-		reply.err = err
+		reply.err = &Error{err}
 		return reply
 	}
 
@@ -33,14 +33,14 @@ func (r Redis) HGet(key string, args ...interface{}) *Reply {
 	return r.cmd("HGET", args...)
 }
 
-func (r Redis) Set(key string, value interface{}, args ...interface{}) error {
+func (r Redis) Set(key string, value interface{}, args ...interface{}) *Reply {
 	args = append([]interface{}{key, value}, args...)
-	return r.cmd("SET", args...).err
+	return r.cmd("SET", args...)
 }
 
-func (r Redis) HSet(key, field string, value interface{}, args ...interface{}) error {
+func (r Redis) HSet(key, field string, value interface{}, args ...interface{}) *Reply {
 	args = append([]interface{}{key, field, value}, args...)
-	return r.cmd("HSET", args...).err
+	return r.cmd("HSET", args...)
 }
 
 func (r Redis) SMembers(key string, args ...interface{}) *Reply {
@@ -48,12 +48,12 @@ func (r Redis) SMembers(key string, args ...interface{}) *Reply {
 	return r.cmd("SMEMBERS", args...)
 }
 
-func (r Redis) Del(keys ...string) error {
+func (r Redis) Del(keys ...string) *Reply {
 	args := make([]interface{}, len(keys))
 	for i, v := range keys {
 		args[i] = v
 	}
-	return r.cmd("DEL", args...).err
+	return r.cmd("DEL", args...)
 }
 
 func (r Redis) HKeys(key string, args ...interface{}) *Reply {
@@ -61,12 +61,12 @@ func (r Redis) HKeys(key string, args ...interface{}) *Reply {
 	return r.cmd("HKEYS", args...)
 }
 
-func (r Redis) Expire(key string, args ...interface{}) error {
+func (r Redis) Expire(key string, args ...interface{}) *Reply {
 	args = append([]interface{}{key}, args...)
-	return r.cmd("EXPIRE", args...).err
+	return r.cmd("EXPIRE", args...)
 }
 
-func (r Redis) Publish(channel string, args ...interface{}) error {
+func (r Redis) Publish(channel string, args ...interface{}) *Reply {
 	args = append([]interface{}{channel}, args...)
-	return r.cmd("PUBLISH", args...).err
+	return r.cmd("PUBLISH", args...)
 }

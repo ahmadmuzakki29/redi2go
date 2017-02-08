@@ -8,13 +8,13 @@ import (
 )
 
 type Redis struct {
-	redigo.Pool
+	pool redigo.Pool
 	Mock *redigomock.Conn
 }
 
 type Reply struct {
 	value interface{}
-	err   error
+	err   *Error
 }
 
 func GetRedisMock() (*Redis, *redigomock.Conn) {
@@ -36,4 +36,12 @@ func GetRedis(address string) *Redis {
 	}
 
 	return &Redis{pool, nil}
+}
+
+type Error struct {
+	error
+}
+
+func (e *Error) ErrNil() bool {
+	return e.error == redigo.ErrNil
 }
